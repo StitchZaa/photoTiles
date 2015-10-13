@@ -8,13 +8,13 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIScrollViewDelegate {
+class ViewController: UIViewController {
 
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var mainPhoto: UIImageView!
     @IBOutlet weak var mainFrame: UIView!
     
-    @IBOutlet weak var scrollView: UIScrollView!
+//    @IBOutlet weak var scrollView: UIScrollView!
 //    var scrollView:UIScrollView!
     
     var imageView:UIImageView!
@@ -60,6 +60,10 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: "detectPinch:")
         containerView.gestureRecognizers = [pinchRecognizer]
         
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         let containerFrame = containerView.frame
         
         leftPadding = gap
@@ -71,6 +75,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         minHeight = 80
         maxWidth = containerFrame.width - gap - gap
         maxHeight = containerFrame.height - gap - gap
+        
+        updateFrame()
     }
     
     func detectPan(recognizer:UIPanGestureRecognizer) {
@@ -111,6 +117,14 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     func updateFrame () {
         
         var newFrame = mainFrame.frame
+        
+        if newFrame.width > maxWidth {
+            newFrame.size.width = maxWidth
+        }
+        if newFrame.height > maxHeight {
+            newFrame.size.height = maxHeight
+        }
+        
         if newFrame.origin.x < leftPadding {
             newFrame.origin.x = leftPadding
         }
@@ -138,17 +152,17 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 //        return imageView
 //    }
     
-    func scrollViewDidZoom(scrollView: UIScrollView) {
-        centerScrollViewContents()
-    }
-    
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        NSLog("scrolling")
-    }
-    
-    func centerScrollViewContents() {
-        print("centerScrollViewContents")
-    }
+//    func scrollViewDidZoom(scrollView: UIScrollView) {
+//        centerScrollViewContents()
+//    }
+//    
+//    func scrollViewDidScroll(scrollView: UIScrollView) {
+//        NSLog("scrolling")
+//    }
+//    
+//    func centerScrollViewContents() {
+//        print("centerScrollViewContents")
+//    }
 
     @IBAction func onPinchFrame(sender: AnyObject) {
         

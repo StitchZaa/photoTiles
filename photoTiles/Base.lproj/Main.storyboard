@@ -40,10 +40,6 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kvf-0d-gJC">
                                         <rect key="frame" x="124" y="112" width="352" height="271"/>
                                     </imageView>
-                                    <scrollView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ij-QE-rF2">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="476"/>
-                                        <color key="backgroundColor" red="0.40000000596046448" green="0.80000001192092896" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
-                                    </scrollView>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jC6-e9-fWM">
                                         <rect key="frame" x="160" y="82" width="240" height="128"/>
                                         <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="0.5" colorSpace="calibratedRGB"/>
@@ -51,12 +47,6 @@
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="7ij-QE-rF2" secondAttribute="trailing" id="6IN-Tc-OZ8"/>
-                                    <constraint firstAttribute="bottom" secondItem="7ij-QE-rF2" secondAttribute="bottom" id="Vca-tj-FU2"/>
-                                    <constraint firstItem="7ij-QE-rF2" firstAttribute="leading" secondItem="Yc2-9V-6Fx" secondAttribute="leading" id="Zr4-38-wVw"/>
-                                    <constraint firstItem="7ij-QE-rF2" firstAttribute="top" secondItem="Yc2-9V-6Fx" secondAttribute="top" id="zC7-4I-sKZ"/>
-                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GAL-Vc-eCm">
                                 <rect key="frame" x="0.0" y="540" width="600" height="60"/>
@@ -84,7 +74,6 @@
                         <outlet property="containerView" destination="Yc2-9V-6Fx" id="laf-Or-i1a"/>
                         <outlet property="mainFrame" destination="jC6-e9-fWM" id="eJy-Qh-vt7"/>
                         <outlet property="mainPhoto" destination="kvf-0d-gJC" id="5L1-Q6-FXe"/>
-                        <outlet property="scrollView" destination="7ij-QE-rF2" id="FqF-ho-jFz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
