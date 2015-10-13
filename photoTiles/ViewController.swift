@@ -19,9 +19,23 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     var imageView:UIImageView!
     
+    var leftPadding:CGFloat!
+    var rightPadding:CGFloat!
+    var topPadding:CGFloat!
+    var bottomPadding:CGFloat!
+    
+    var maxWidth:CGFloat!
+    var maxHeight:CGFloat!
+    var minWidth:CGFloat!
+    var minHeight:CGFloat!
+    
+    let gap: CGFloat = 10.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        /*
 //        scrollView = UIScrollView(frame: containerView.frame)
         scrollView.delegate = self
         scrollView.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.3)
@@ -38,7 +52,81 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         scrollView.contentSize = CGSize(width: scrollView.frame.width * 3, height: scrollView.frame.height * 3)
         
         containerView.addSubview(scrollView)
+        */
         
+        let panRecognizer = UIPanGestureRecognizer(target:self, action:"detectPan:")
+        mainFrame.gestureRecognizers = [panRecognizer]
+        
+        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: "detectPinch:")
+        containerView.gestureRecognizers = [pinchRecognizer]
+        
+        let containerFrame = containerView.frame
+        
+        leftPadding = gap
+        rightPadding = containerFrame.width - gap
+        topPadding = gap
+        bottomPadding = containerFrame.height - gap
+        
+        minWidth = 80
+        minHeight = 80
+        maxWidth = containerFrame.width - gap - gap
+        maxHeight = containerFrame.height - gap - gap
+    }
+    
+    func detectPan(recognizer:UIPanGestureRecognizer) {
+        let translation  = recognizer.translationInView(containerView)
+        let lastLocation = mainFrame.center
+        mainFrame.center = CGPointMake(lastLocation.x + translation.x, lastLocation.y + translation.y)
+        
+        recognizer.setTranslation(CGPointZero, inView: containerView)
+        
+        updateFrame()
+        
+        print("detectPan: \(translation) / \(lastLocation)")
+    }
+    
+    func detectPinch(recognizer: UIPinchGestureRecognizer) {
+//        if let view = recognizer.view {
+//            view.transform = CGAffineTransformScale(view.transform, recognizer.scale, recognizer.scale)
+//            recognizer.scale = 1
+//        }
+        
+        let frame = mainFrame.frame
+        
+        print("frame: \(frame)")
+        print("left: \(leftPadding), right: \(rightPadding), top: \(topPadding), bottom: \(bottomPadding), ")
+        print("minWidth: \(minWidth), maxWidth: \(maxWidth), minHeight:\(minHeight), maxHeight: \(maxHeight)")
+        
+        if ((frame.width < maxWidth && frame.height < maxHeight) || recognizer.scale < 1) && ((frame.width > minWidth && frame.height > minHeight) || recognizer.scale > 1) {
+            mainFrame.transform = CGAffineTransformScale(mainFrame.transform, recognizer.scale, recognizer.scale)
+            recognizer.scale = 1
+            
+            updateFrame()
+        }
+        
+        
+        print("detectPinch: \(recognizer.scale)")
+    }
+    
+    func updateFrame () {
+        
+        var newFrame = mainFrame.frame
+        if newFrame.origin.x < leftPadding {
+            newFrame.origin.x = leftPadding
+        }
+        if (newFrame.origin.x + newFrame.width) > rightPadding {
+            newFrame.origin.x = rightPadding - newFrame.width
+        }
+        if newFrame.origin.y < topPadding {
+            newFrame.origin.y = topPadding
+        }
+        if (newFrame.origin.y + newFrame.height) > bottomPadding {
+            newFrame.origin.y = bottomPadding - newFrame.height
+        }
+        
+        print("newframe.origin: \(newFrame.origin)")
+        
+        mainFrame.frame = newFrame
     }
 
     override func didReceiveMemoryWarning() {
