@@ -8,16 +8,16 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var mainPhoto: UIImageView!
     @IBOutlet weak var mainFrame: UIView!
     
-//    @IBOutlet weak var scrollView: UIScrollView!
-//    var scrollView:UIScrollView!
+//    var imageView:UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     
-    var imageView:UIImageView!
+    var picker = UIImagePickerController()
     
     var leftPadding:CGFloat!
     var rightPadding:CGFloat!
@@ -34,33 +34,16 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        /*
-//        scrollView = UIScrollView(frame: containerView.frame)
-        scrollView.delegate = self
-        scrollView.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.3)
-        
-        scrollView.minimumZoomScale = 0.5
-        scrollView.maximumZoomScale = 1.0
-        scrollView.zoomScale = 1.0
-        
-        let image:UIImage = UIImage(named: "img3")!
-//        let imageView = UIImageView(image: image)
-        imageView = UIImageView(image: image)
-        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size:image.size)
-        scrollView.addSubview(imageView)
-        scrollView.contentSize = CGSize(width: scrollView.frame.width * 3, height: scrollView.frame.height * 3)
-        
-        containerView.addSubview(scrollView)
-        */
-        
         let panRecognizer = UIPanGestureRecognizer(target:self, action:"detectPan:")
         mainFrame.gestureRecognizers = [panRecognizer]
         
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: "detectPinch:")
         containerView.gestureRecognizers = [pinchRecognizer]
         
-        
+        picker.delegate = self
+        picker.allowsEditing = false
+        picker.sourceType = .PhotoLibrary
+        picker.modalPresentationStyle = UIModalPresentationStyle.OverFullScreen
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -71,8 +54,8 @@ class ViewController: UIViewController {
         topPadding = gap
         bottomPadding = containerFrame.height - gap
         
-        minWidth = 80
-        minHeight = 80
+        minWidth = 60
+        minHeight = 60
         maxWidth = containerFrame.width - gap - gap
         maxHeight = containerFrame.height - gap - gap
         
@@ -92,16 +75,10 @@ class ViewController: UIViewController {
     }
     
     func detectPinch(recognizer: UIPinchGestureRecognizer) {
-//        if let view = recognizer.view {
-//            view.transform = CGAffineTransformScale(view.transform, recognizer.scale, recognizer.scale)
-//            recognizer.scale = 1
-//        }
         
         let frame = mainFrame.frame
         
-        print("frame: \(frame)")
-        print("left: \(leftPadding), right: \(rightPadding), top: \(topPadding), bottom: \(bottomPadding), ")
-        print("minWidth: \(minWidth), maxWidth: \(maxWidth), minHeight:\(minHeight), maxHeight: \(maxHeight)")
+//        printLog()
         
         if ((frame.width < maxWidth && frame.height < maxHeight) || recognizer.scale < 1) && ((frame.width > minWidth && frame.height > minHeight) || recognizer.scale > 1) {
             mainFrame.transform = CGAffineTransformScale(mainFrame.transform, recognizer.scale, recognizer.scale)
@@ -142,38 +119,68 @@ class ViewController: UIViewController {
         
         mainFrame.frame = newFrame
     }
+    
+    func addImage(image: UIImage) {
+        imageView.image = image
+        print("addImage: \(imageView.frame), \(image.size)")
+        
+        let imageFrame = imageView.frame
+        let frameWidth = imageFrame.width
+        let frameHeight = imageFrame.height
+        
+        var imageWidth = image.size.width
+        var imageHeight = image.size.height
+        
+        let frameRatio = frameHeight / frameWidth
+        let imageRatio = imageHeight / imageWidth
+        if imageRatio <= frameRatio {
+            imageHeight = imageHeight / imageWidth * frameWidth
+            imageWidth = frameWidth
+        } else {
+            imageWidth = imageWidth / imageHeight * frameHeight
+            imageHeight = frameHeight
+        }
+        
+        print("imageRatio: \(imageRatio), frameRatio: \(frameRatio)")
+        
+        maxWidth = imageWidth
+        maxHeight = imageHeight
+        
+        leftPadding = (containerView.frame.width - imageWidth) / 2
+        rightPadding = leftPadding + imageWidth
+        topPadding = (containerView.frame.height - imageHeight) / 2
+        bottomPadding = topPadding + imageHeight
+        
+        printLog()
+    }
+    
+    func printLog() {
+        
+        print("print log")
+        print("left: \(leftPadding), right: \(rightPadding), top: \(topPadding), bottom: \(bottomPadding), ")
+        print("minWidth: \(minWidth), maxWidth: \(maxWidth), minHeight:\(minHeight), maxHeight: \(maxHeight)")
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
+        dismissViewControllerAnimated(true, completion: nil) //5
+        addImage(chosenImage)
+    }
+    
+    //What to do if the image picker cancels.
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-//    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
-//        return imageView
-//    }
-    
-//    func scrollViewDidZoom(scrollView: UIScrollView) {
-//        centerScrollViewContents()
-//    }
-//    
-//    func scrollViewDidScroll(scrollView: UIScrollView) {
-//        NSLog("scrolling")
-//    }
-//    
-//    func centerScrollViewContents() {
-//        print("centerScrollViewContents")
-//    }
-
-    @IBAction func onPinchFrame(sender: AnyObject) {
-        
-    }
-
-    @IBAction func onPanFrame(sender: AnyObject) {
-        
-    }
     
     @IBAction func importPhoto(sender: AnyObject) {
-        
+        presentViewController(picker, animated: true, completion: nil)
     }
 
     @IBAction func exportPhoto(sender: AnyObject) {
