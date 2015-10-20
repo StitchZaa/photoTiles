@@ -192,6 +192,7 @@
 				TargetAttributes = {
 					84BFF4DF1BCC480900C840C3 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = KSWD9J3ZUS;
 					};
 					84BFF4F31BCC480C00C840C3 = {
 						CreatedOnToolsVersion = 7.0;
@@ -398,6 +399,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = photoTiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.StitchZaa.photoTiles;
@@ -409,6 +411,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = photoTiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.StitchZaa.photoTiles;
@@ -483,6 +486,7 @@
 				84BFF50A1BCC480D00C840C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84BFF50B1BCC480D00C840C3 /* Build configuration list for PBXNativeTarget "photoTilesTests" */ = {
 			isa = XCConfigurationList;
@@ -491,6 +495,7 @@
 				84BFF50D1BCC480D00C840C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84BFF50E1BCC480D00C840C3 /* Build configuration list for PBXNativeTarget "photoTilesUITests" */ = {
 			isa = XCConfigurationList;
@@ -499,6 +504,7 @@
 				84BFF5101BCC480D00C840C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

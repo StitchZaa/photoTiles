@@ -96,9 +96,49 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dQR-yh-0pH">
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dQR-yh-0pH">
                                         <rect key="frame" x="180" y="174" width="240" height="128"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lB6-kW-uyo">
+                                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0rb-sw-H6Q">
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bgF-vJ-fny">
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VNy-y0-G9J">
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gs0-oh-v19">
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
+                                            </view>
+                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="topleft" translatesAutoresizingMaskIntoConstraints="NO" id="8dg-NW-s2o">
+                                                <rect key="frame" x="-4" y="-4" width="40" height="40"/>
+                                            </imageView>
+                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="topright" translatesAutoresizingMaskIntoConstraints="NO" id="hbz-zg-TXj">
+                                                <rect key="frame" x="204" y="-4" width="40" height="40"/>
+                                            </imageView>
+                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bottomright" translatesAutoresizingMaskIntoConstraints="NO" id="1Yd-yt-d1D">
+                                                <rect key="frame" x="204" y="92" width="40" height="40"/>
+                                            </imageView>
+                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bottomleft" translatesAutoresizingMaskIntoConstraints="NO" id="8Aa-ds-B9c">
+                                                <rect key="frame" x="-4" y="92" width="40" height="40"/>
+                                            </imageView>
+                                        </subviews>
                                         <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="0.059999999999999998" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="lB6-kW-uyo" firstAttribute="leading" secondItem="dQR-yh-0pH" secondAttribute="leading" id="I6G-TJ-eC1"/>
+                                            <constraint firstAttribute="trailing" secondItem="lB6-kW-uyo" secondAttribute="trailing" id="K5y-Jy-4bx"/>
+                                            <constraint firstAttribute="bottom" secondItem="lB6-kW-uyo" secondAttribute="bottom" id="Kg1-P4-Pni"/>
+                                            <constraint firstItem="lB6-kW-uyo" firstAttribute="top" secondItem="dQR-yh-0pH" secondAttribute="top" id="MfH-Er-XFf"/>
+                                        </constraints>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -136,11 +176,15 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="bottomleftCorner" destination="VNy-y0-G9J" id="ZEg-ls-aLb"/>
+                        <outlet property="bottomrightCorner" destination="Gs0-oh-v19" id="yNl-iV-Yf7"/>
                         <outlet property="containerView" destination="Yc2-9V-6Fx" id="laf-Or-i1a"/>
                         <outlet property="imageView" destination="kvf-0d-gJC" id="haA-2V-B5n"/>
                         <outlet property="invisibleFrame" destination="ra8-JC-1DU" id="NrO-3m-l5b"/>
                         <outlet property="mainFrame" destination="dQR-yh-0pH" id="dAc-xY-Hes"/>
                         <outlet property="mainPhoto" destination="kvf-0d-gJC" id="5L1-Q6-FXe"/>
+                        <outlet property="topleftCorner" destination="0rb-sw-H6Q" id="gbD-sZ-VpY"/>
+                        <outlet property="toprightCorner" destination="bgF-vJ-fny" id="Mv9-So-xO0"/>
                         <outlet property="wrapperView" destination="SpH-7o-l6e" id="KwJ-hx-sZs"/>
                     </connections>
                 </viewController>
@@ -149,4 +193,10 @@
             <point key="canvasLocation" x="230" y="327"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="bottomleft" width="52" height="52"/>
+        <image name="bottomright" width="52" height="52"/>
+        <image name="topleft" width="52" height="52"/>
+        <image name="topright" width="52" height="52"/>
+    </resources>
 </document>

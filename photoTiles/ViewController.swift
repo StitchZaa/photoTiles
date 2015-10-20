@@ -17,6 +17,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var invisibleFrame: UIView!
     @IBOutlet weak var wrapperView: UIView!
     
+    @IBOutlet weak var topleftCorner: UIView!
+    @IBOutlet weak var toprightCorner: UIView!
+    @IBOutlet weak var bottomleftCorner: UIView!
+    @IBOutlet weak var bottomrightCorner: UIView!
+    
+    
 //    var imageView:UIImageView!
     @IBOutlet weak var imageView: UIImageView!
     
@@ -96,11 +102,50 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         newFrame.origin.y = round((containerFrame.height - newFrameWidth) * 0.5)
         mainFrame.frame = newFrame
         
+        
         updateScale()
         updatePosition()
+        
+        
+        NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("updateCorner"), userInfo: nil, repeats: false)
     }
     
-    
+    func updateCorner() {
+        let newFrame = mainFrame.frame
+        let cornerWH:CGFloat = 40
+        let cornerMargin:CGFloat = 4
+        
+        
+        var topleftFrame = topleftCorner.frame
+        topleftFrame.size.width = cornerWH
+        topleftFrame.size.height = cornerWH
+        topleftFrame.origin.x = 0 - cornerMargin
+        topleftFrame.origin.y = 0 - cornerMargin
+        topleftCorner.frame = topleftFrame
+        
+        var toprightFrame = toprightCorner.frame
+        toprightFrame.size.width = cornerWH
+        toprightFrame.size.height = cornerWH
+        toprightFrame.origin.x = newFrame.size.width - cornerWH + cornerMargin
+        toprightFrame.origin.y = 0 - cornerMargin
+        toprightCorner.frame = toprightFrame
+        
+        var bottomleftFrame = bottomleftCorner.frame
+        bottomleftFrame.size.width = cornerWH
+        bottomleftFrame.size.height = cornerWH
+        bottomleftFrame.origin.x = 0 - cornerMargin
+        bottomleftFrame.origin.y = newFrame.size.height - cornerWH + cornerMargin
+        bottomleftCorner.frame = bottomleftFrame
+        
+        var bottomrightFrame = bottomrightCorner.frame
+        bottomrightFrame.size.width = cornerWH
+        bottomrightFrame.size.height = cornerWH
+        bottomrightFrame.origin.x = newFrame.size.width - cornerWH + cornerMargin
+        bottomrightFrame.origin.y = newFrame.size.height - cornerWH + cornerMargin
+        bottomrightCorner.frame = bottomrightFrame
+        
+        print("updateCorner: \(newFrame), \(topleftFrame), \(toprightFrame), \(bottomleftFrame), \(bottomrightFrame)")
+    }
     
     func updatePosition () {
         
@@ -147,6 +192,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         endYInvisibleFrame = endY
         
         updateConstrain()
+        
+//        updateCorner()
     }
     
     func updateScale() {
@@ -166,7 +213,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         mainFrame.frame = newFrame
         
+//        updateCorner()
         updateInviFrameBackground()
+        
     }
     
     func updateInviFrameBackground() {
