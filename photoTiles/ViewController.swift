@@ -66,6 +66,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: "detectPinch:")
         containerView.gestureRecognizers = [pinchRecognizer]
         
+        let topleftPanRec = UIPanGestureRecognizer(target:self, action:"topleftPan:")
+        topleftCorner.gestureRecognizers = [topleftPanRec]
+        let toprightPanRec = UIPanGestureRecognizer(target:self, action:"toprightPan:")
+        toprightCorner.gestureRecognizers = [toprightPanRec]
+        let bottomleftPanRec = UIPanGestureRecognizer(target:self, action:"bottomleftPan:")
+        bottomleftCorner.gestureRecognizers = [bottomleftPanRec]
+        let bottomrightPanRec = UIPanGestureRecognizer(target:self, action:"bottomrightPan:")
+        bottomrightCorner.gestureRecognizers = [bottomrightPanRec]
+        
         picker.delegate = self
         picker.allowsEditing = false
         picker.sourceType = .PhotoLibrary
@@ -112,36 +121,36 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func updateCorner() {
         let newFrame = mainFrame.frame
-        let cornerWH:CGFloat = 40
-        let cornerMargin:CGFloat = 4
+        let cornerWH:CGFloat = 30
+        let cornerMargin:CGFloat = 10
         
         
         var topleftFrame = topleftCorner.frame
         topleftFrame.size.width = cornerWH
         topleftFrame.size.height = cornerWH
-        topleftFrame.origin.x = 0 - cornerMargin
-        topleftFrame.origin.y = 0 - cornerMargin
+        topleftFrame.origin.x = newFrame.origin.x - cornerMargin
+        topleftFrame.origin.y = newFrame.origin.y - cornerMargin
         topleftCorner.frame = topleftFrame
         
         var toprightFrame = toprightCorner.frame
         toprightFrame.size.width = cornerWH
         toprightFrame.size.height = cornerWH
-        toprightFrame.origin.x = newFrame.size.width - cornerWH + cornerMargin
-        toprightFrame.origin.y = 0 - cornerMargin
+        toprightFrame.origin.x = newFrame.origin.x + newFrame.size.width - cornerWH + cornerMargin
+        toprightFrame.origin.y = newFrame.origin.y - cornerMargin
         toprightCorner.frame = toprightFrame
         
         var bottomleftFrame = bottomleftCorner.frame
         bottomleftFrame.size.width = cornerWH
         bottomleftFrame.size.height = cornerWH
-        bottomleftFrame.origin.x = 0 - cornerMargin
-        bottomleftFrame.origin.y = newFrame.size.height - cornerWH + cornerMargin
+        bottomleftFrame.origin.x = newFrame.origin.x - cornerMargin
+        bottomleftFrame.origin.y = newFrame.origin.y + newFrame.size.height - cornerWH + cornerMargin
         bottomleftCorner.frame = bottomleftFrame
         
         var bottomrightFrame = bottomrightCorner.frame
         bottomrightFrame.size.width = cornerWH
         bottomrightFrame.size.height = cornerWH
-        bottomrightFrame.origin.x = newFrame.size.width - cornerWH + cornerMargin
-        bottomrightFrame.origin.y = newFrame.size.height - cornerWH + cornerMargin
+        bottomrightFrame.origin.x = newFrame.origin.x + newFrame.size.width - cornerWH + cornerMargin
+        bottomrightFrame.origin.y = newFrame.origin.y + newFrame.size.height - cornerWH + cornerMargin
         bottomrightCorner.frame = bottomrightFrame
         
         print("updateCorner: \(newFrame), \(topleftFrame), \(toprightFrame), \(bottomleftFrame), \(bottomrightFrame)")
@@ -193,7 +202,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         updateConstrain()
         
-//        updateCorner()
+        updateCorner()
     }
     
     func updateScale() {
@@ -239,6 +248,88 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         printFrameLog()
     }
     
+    func topleftPan(recognizer:UIPanGestureRecognizer) {
+        let translation  = recognizer.translationInView(containerView)
+        let frame = mainFrame.frame
+        //        mainFrame.center = CGPointMake(lastLocation.x + translation.x, lastLocation.y + translation.y)
+        
+        var frameX = frame.origin.x + translation.x
+        var frameY = frame.origin.y + translation.y
+        
+        var frameWidth = frame.width - translation.x
+        var frameHeight = frame.height - translation.y
+        
+        if aspectRatio != 0 {
+            if abs(translation.x) > abs(translation.y) {
+                frameWidth = frameHeight / aspectRatio
+                frameX = frame.origin.x + frame.width - frameWidth
+            } else {
+                frameHeight = frameWidth * aspectRatio
+                frameY = frame.origin.y + frame.height - frameHeight
+            }
+        }
+        
+        if aspectRatio == 0 || (frameWidth > minWidth && frameHeight > minHeight) {
+            recognizer.setTranslation(CGPointZero, inView: containerView)
+            setNewFrame(frameX, frameY: frameY, frameWidth: frameWidth, frameHeight: frameHeight)
+        }
+    }
+    
+    func toprightPan(recognizer:UIPanGestureRecognizer) {
+        let translation  = recognizer.translationInView(containerView)
+        let frame = mainFrame.frame
+        //        mainFrame.center = CGPointMake(lastLocation.x + translation.x, lastLocation.y + translation.y)
+        
+        var frameX = frame.origin.x + translation.x
+        var frameY = frame.origin.y + translation.y
+        
+        var frameWidth = frame.width - translation.x
+        var frameHeight = frame.height - translation.y
+        
+        if aspectRatio != 0 {
+            if abs(translation.x) > abs(translation.y) {
+                frameWidth = frameHeight / aspectRatio
+                frameX = frame.origin.x + frame.width - frameWidth
+            } else {
+                frameHeight = frameWidth * aspectRatio
+                frameY = frame.origin.y + frame.height - frameHeight
+            }
+        }
+        
+        if aspectRatio == 0 || (frameWidth > minWidth && frameHeight > minHeight) {
+            recognizer.setTranslation(CGPointZero, inView: containerView)
+            setNewFrame(frameX, frameY: frameY, frameWidth: frameWidth, frameHeight: frameHeight)
+        }
+    }
+    
+    func setNewFrame(frameX:CGFloat, frameY:CGFloat, frameWidth:CGFloat, frameHeight:CGFloat){
+        var frame = mainFrame.frame
+        if aspectRatio == 0 {
+            if frameWidth > minWidth {
+                frame.origin.x = frameX
+                frame.size.width = frameWidth
+            }
+            
+            if frameHeight > minHeight {
+                frame.origin.y = frameY
+                frame.size.height = frameHeight
+            }
+            
+        } else {
+            frame.origin.x = frameX
+            frame.size.width = frameWidth
+            frame.origin.y = frameY
+            frame.size.height = frameHeight
+            
+        }
+        mainFrame.frame = frame
+        
+        updateScale()
+        updatePosition()
+        
+        
+    }
+    
     func detectPan(recognizer:UIPanGestureRecognizer) {
         let translation  = recognizer.translationInView(containerView)
         let lastLocation = mainFrame.center
@@ -257,15 +348,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func detectPinch(recognizer: UIPinchGestureRecognizer) {
         
         let frame = mainFrame.frame
+//        let lastLocation = mainFrame.center
         print("detectPinch frame: \(frame)")
         //        printLog()
         
         if ((frame.width < maxWidth && frame.height < maxHeight) || recognizer.scale < 1) && ((frame.width > minWidth && frame.height > minHeight) || recognizer.scale > 1) {
             mainFrame.transform = CGAffineTransformScale(mainFrame.transform, recognizer.scale, recognizer.scale)
+            
+//            frame.size.width = frame.width * recognizer.scale
+//            frame.size.height = frame.height * recognizer.scale
+            
+//            mainFrame.frame = frame
+//            mainFrame.center = lastLocation
+            
             recognizer.scale = 1
             
             updateScale()
             updatePosition()
+//            updateCorner()
         }
         
         
