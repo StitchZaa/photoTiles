@@ -251,7 +251,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func topleftPan(recognizer:UIPanGestureRecognizer) {
         let translation  = recognizer.translationInView(containerView)
         let frame = mainFrame.frame
-        //        mainFrame.center = CGPointMake(lastLocation.x + translation.x, lastLocation.y + translation.y)
         
         var frameX = frame.origin.x + translation.x
         var frameY = frame.origin.y + translation.y
@@ -278,13 +277,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func toprightPan(recognizer:UIPanGestureRecognizer) {
         let translation  = recognizer.translationInView(containerView)
         let frame = mainFrame.frame
-        //        mainFrame.center = CGPointMake(lastLocation.x + translation.x, lastLocation.y + translation.y)
         
-        var frameX = frame.origin.x + translation.x
+        let frameX = frame.origin.x
         var frameY = frame.origin.y + translation.y
         
-        var frameWidth = frame.width - translation.x
+        var frameWidth = frame.width + translation.x
         var frameHeight = frame.height - translation.y
+        
+        if aspectRatio != 0 {
+            if abs(translation.x) > abs(translation.y) {
+                frameWidth = frameHeight / aspectRatio
+            } else {
+                frameHeight = frameWidth * aspectRatio
+                frameY = frame.origin.y + frame.height - frameHeight
+            }
+        }
+        
+        if aspectRatio == 0 || (frameWidth > minWidth && frameHeight > minHeight) {
+            recognizer.setTranslation(CGPointZero, inView: containerView)
+            setNewFrame(frameX, frameY: frameY, frameWidth: frameWidth, frameHeight: frameHeight)
+        }
+    }
+    
+    func bottomleftPan(recognizer:UIPanGestureRecognizer) {
+        let translation  = recognizer.translationInView(containerView)
+        let frame = mainFrame.frame
+        
+        var frameX = frame.origin.x + translation.x
+        let frameY = frame.origin.y
+        
+        var frameWidth = frame.width - translation.x
+        var frameHeight = frame.height + translation.y
         
         if aspectRatio != 0 {
             if abs(translation.x) > abs(translation.y) {
@@ -292,7 +315,30 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 frameX = frame.origin.x + frame.width - frameWidth
             } else {
                 frameHeight = frameWidth * aspectRatio
-                frameY = frame.origin.y + frame.height - frameHeight
+            }
+        }
+        
+        if aspectRatio == 0 || (frameWidth > minWidth && frameHeight > minHeight) {
+            recognizer.setTranslation(CGPointZero, inView: containerView)
+            setNewFrame(frameX, frameY: frameY, frameWidth: frameWidth, frameHeight: frameHeight)
+        }
+    }
+    
+    func bottomrightPan(recognizer:UIPanGestureRecognizer) {
+        let translation  = recognizer.translationInView(containerView)
+        let frame = mainFrame.frame
+        
+        let frameX = frame.origin.x
+        let frameY = frame.origin.y
+        
+        var frameWidth = frame.width + translation.x
+        var frameHeight = frame.height + translation.y
+        
+        if aspectRatio != 0 {
+            if abs(translation.x) > abs(translation.y) {
+                frameWidth = frameHeight / aspectRatio
+            } else {
+                frameHeight = frameWidth * aspectRatio
             }
         }
         
@@ -328,6 +374,78 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         updatePosition()
         
         
+    }
+    
+    func setFullWidth() {
+        var frame = mainFrame.frame
+        
+        let amountX:CGFloat = round((endXInvisibleFrame - startXInvisibleFrame) / frame.width)
+        //        let amountY:CGFloat = round((endYInvisibleFrame - startYInvisibleFrame) / frame.height)
+        
+        let newWidth = floor(maxWidth / amountX)
+        
+        let oldX = frame.origin.x
+        var newX = oldX
+        var deltaX = maxWidth
+        for (var curX = leftPadding; curX < rightPadding; curX = curX + newWidth) {
+            if abs(oldX - curX) < deltaX {
+                deltaX = abs(oldX - curX)
+                newX = curX
+            }
+        }
+        
+        frame.origin.x = newX
+        frame.size.width = newWidth
+        
+        if aspectRatio != 0 {
+            let newHeight = newWidth * aspectRatio
+            let deltaHeight = newHeight - frame.size.height
+            
+            frame.size.height = newHeight
+            frame.origin.y = frame.origin.y - (deltaHeight * 0.5)
+        }
+        
+        
+        mainFrame.frame = frame
+        
+        updateScale()
+        updatePosition()
+    }
+    
+    func setFullHeight() {
+        var frame = mainFrame.frame
+        
+//        let amountX:CGFloat = round((endXInvisibleFrame - startXInvisibleFrame) / frame.width)
+        let amountY:CGFloat = round((endYInvisibleFrame - startYInvisibleFrame) / frame.height)
+        
+        let newHeight = floor(maxHeight / amountY)
+        
+        let oldY = frame.origin.y
+        var newY = oldY
+        var deltaY = maxHeight
+        for (var curY = topPadding; curY < bottomPadding; curY = curY + newHeight) {
+            if abs(oldY - curY) < deltaY {
+                deltaY = abs(oldY - curY)
+                newY = curY
+            }
+        }
+        
+        frame.origin.y = newY
+        frame.size.height = newHeight
+        
+        if aspectRatio != 0 {
+            let newWidth = newHeight / aspectRatio
+            let deltaWidth = newWidth - frame.size.width
+            
+            frame.size.width = newWidth
+            frame.origin.x = frame.origin.x - (deltaWidth * 0.5)
+        }
+        
+        
+        mainFrame.frame = frame
+        
+        updateScale()
+        updatePosition()
     }
     
     func detectPan(recognizer:UIPanGestureRecognizer) {
@@ -408,6 +526,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         topPadding = (containerView.frame.height - imageHeight) / 2
         bottomPadding = topPadding + imageHeight
         
+        updateScale()
         updatePosition()
         printLog()
     }
@@ -474,6 +593,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func onFullWidth(sender: AnyObject) {
+        setFullWidth()
+    }
+    
+    @IBAction func onFullHeight(sender: AnyObject) {
+        setFullHeight()
+    }
     
     @IBAction func importPhoto(sender: AnyObject) {
         presentViewController(picker, animated: true, completion: nil)
